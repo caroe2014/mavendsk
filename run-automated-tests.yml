@@ -1,0 +1,18 @@
+steps:
+- script: |
+    mvn surefire-report:report -Dgroups=$(categories)
+  displayName: Run tests
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/TEST-*.xml'
+    failTaskOnFailedTests: true # Optional
+- script: |
+    echo "mkdir reports"
+    mkdir reports
+  displayName: mkdir
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: reports'
+  inputs:
+    artifact: Reports
+    path: $(System.DefaultWorkingDirectory)/target/site
